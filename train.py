@@ -1,5 +1,6 @@
 import sys
 import json
+import os
 
 def main():
     if len(sys.argv) != 2:
@@ -21,7 +22,7 @@ def main():
         sys.exit(1)
 
     import mlflow
-    mlflow.set_tracking_uri(${{ env.TRACKING_UIR }})
+    mlflow.set_tracking_uri(os.environ.get('TRACKING_URI'))
     mlflow.set_experiment(config["experiment_name"])
     
     import sagemaker
