@@ -5,8 +5,6 @@ import os
 import sys
 import pandas as pd
 import numpy as np
-
-#import sagemaker_containers
 import torch
 import torch.distributed as dist
 import torch.nn as nn
@@ -14,6 +12,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 import torch.utils.data
 import torch.utils.data.distributed
+import mlflow
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -176,6 +175,8 @@ def test(model, test_loader, device):
             test_loss, correct, len(test_loader.dataset), 100.0 * correct / len(test_loader.dataset)
         )
     )
+    mlflow.log_metric("test_loss", test_loss)
+    mlflow.log_metric("test_accuracy", 100.0 * correct / len(test_loader.dataset))
 
 def model_fn(model_dir):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
