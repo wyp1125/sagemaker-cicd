@@ -32,7 +32,7 @@ def main():
         py_version="py3",
         instance_count=1,
         instance_type="ml.c4.xlarge",
-        hyperparameters={"epochs": 6, "backend": "gloo"}
+        hyperparameters={"epochs": int(config["num_epochs"]), "backend": "gloo"}
     )
     estimator.fit({"training": config["training_data_path"], 
                    "test": config["testing_data_path"]},
