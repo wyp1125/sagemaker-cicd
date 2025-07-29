@@ -34,6 +34,8 @@ def main():
         instance_type="ml.c4.xlarge",
         hyperparameters={"epochs": 6, "backend": "gloo"}
     )
-
+    estimator.fit({"training": config["training_data_path"], "test": config["testing_data_path"]})
+    print("Training job started successfully.")
+    
 if __name__ == "__main__":
     main()
