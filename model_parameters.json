@@ -1,7 +1,7 @@
 {
     "model_name": "lung_cancer_risk_model",
     "model_version": "v1.0",
-    "role": "arn:aws:iam::925680695682:role/service-role/AmazonSageMaker-ExecutionRole-20200101T123456",
+    "role": "arn:aws:iam::925680695682:role/service-role/AmazonSageMaker-ExecutionRole-20220303T065837",
     "training_data_path": "s3://sagemaker-us-east-1-925680695682/sagemaker/lung-cancer/train/training.csv",
     "testing_data_path": "s3://sagemaker-us-east-1-925680695682/sagemaker/lung-cancer/test/test.csv",
     "learning_rate": 0.05,

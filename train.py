@@ -21,8 +21,7 @@ def main():
         sys.exit(1)
     
     sagemaker_session = sagemaker.Session()
-    role = sagemaker.get_execution_role()
-    print(role)
+    print(config["role"])
 
 if __name__ == "__main__":
     main()
