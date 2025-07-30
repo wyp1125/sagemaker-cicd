@@ -22,6 +22,7 @@ def main():
         sys.exit(1)
 
     import mlflow
+    print("MLflow tracking URI:", os.environ.get('TRACKING_URI'))
     mlflow.set_tracking_uri(os.environ.get('TRACKING_URI'))
     mlflow.set_experiment(config["experiment_name"])
     
