@@ -4,7 +4,7 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 jobs:
-  build:
+  train:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,3 +24,15 @@ jobs:
         env:
             TRACKING_URI: ${{ vars.TRACKING_URI }}
         run: python train.py model_parameters.json
+
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    needs: train
+    steps:
+      - uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: wyp1125
+      - name: Deploy to production
+        run: echo deploying
