@@ -5,7 +5,7 @@
     "training_data_path": "s3://sagemaker-us-east-1-925680695682/sagemaker/lung-cancer/train/training.csv",
     "testing_data_path": "s3://sagemaker-us-east-1-925680695682/sagemaker/lung-cancer/test/test.csv",
     "experiment_name": "lung cancer risks",
-    "training_job_name": "lung-cancer-training-job-4",
+    "training_job_name": "lung-cancer-training-job-5",
     "learning_rate": 0.05,
     "num_epochs": 10,
     "batch_size": 64,
