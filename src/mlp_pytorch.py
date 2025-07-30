@@ -131,32 +131,39 @@ def train(args):
 
     optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum)
     loss_fn = nn.CrossEntropyLoss()
-    for epoch in range(1, args.epochs + 1):
-        model.train()
-        for batch_idx, (data, target) in enumerate(train_loader, 1):
-            data, target = data.to(device), target.to(device)
-            optimizer.zero_grad()
-            output = model(data)
-            loss = loss_fn(output, target)
-            loss.backward()
-            if is_distributed and not use_cuda:
-                # average gradients manually for multi-machine cpu case only
-                _average_gradients(model)
-            optimizer.step()
-            if batch_idx % args.log_interval == 0:
-                logger.info(
-                    "Train Epoch: {} [{}/{} ({:.0f}%)] Loss: {:.6f}".format(
-                        epoch,
-                        batch_idx * len(data),
-                        len(train_loader.sampler),
-                        100.0 * batch_idx / len(train_loader),
-                        loss.item(),
-                    )
-                )
-        test(model, test_loader, device)
+    # MLflow setup
+    mlflow.set_tracking_uri(args.tracking_uri)
+    mlflow.set_experiment(args.experiment_name)
+    with mlflow.start_run(run_name=args.training_job_name) as run:
+        mlflow.log_param("learning_rate", args.lr)
+        mlflow.log_param("num_epochs", args.epochs)
+        mlflow.log_param("backend", args.backend)
+        for epoch in range(1, args.epochs + 1):
+            model.train()
+            for batch_idx, (data, target) in enumerate(train_loader, 1):
+                data, target = data.to(device), target.to(device)
+                optimizer.zero_grad()
+                output = model(data)
+                loss = loss_fn(output, target)
+                loss.backward()
+                if is_distributed and not use_cuda:
+                    # average gradients manually for multi-machine cpu case only
+                    _average_gradients(model)
+                optimizer.step()
+                if batch_idx % args.log_interval == 0:
+                    logger.info(
+                        "Train Epoch: {} [{}/{} ({:.0f}%)] Loss: {:.6f}".format(
+                            epoch,
+                            batch_idx * len(data),
+                            len(train_loader.sampler),
+                            100.0 * batch_idx / len(train_loader),
+                            loss.item(),
+                        )
+                  )
+            test(model, test_loader, device, epoch)
     save_model(model, args.model_dir)
 
-def test(model, test_loader, device):
+def test(model, test_loader, device, step):
     model.eval()
     test_loss = 0
     correct = 0
@@ -175,8 +182,8 @@ def test(model, test_loader, device):
             test_loss, correct, len(test_loader.dataset), 100.0 * correct / len(test_loader.dataset)
         )
     )
-    mlflow.log_metric("test_loss", test_loss)
-    mlflow.log_metric("test_accuracy", 100.0 * correct / len(test_loader.dataset))
+    mlflow.log_metric("test_loss", test_loss, step=step)
+    mlflow.log_metric("test_accuracy", 100.0 * correct / len(test_loader.dataset), step=step)
 
 def model_fn(model_dir):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -234,6 +241,24 @@ if __name__ == "__main__":
         type=str,
         default=None,
         help="backend for distributed training (tcp, gloo on cpu and gloo, nccl on gpu)",
+    )
+    parser.add_argument(
+        "--tracking-uri",
+        type=str,
+        default=None,
+        help="MLflow tracking URI",
+    )
+    parser.add_argument(
+        "--experiment-name",
+        type=str,
+        default=None,
+        help="MLflow experiment name",
+    )
+    parser.add_argument(
+        "--training-job-name",
+        type=str,
+        default=None,
+        help="Training job name for SageMaker",
     )
 
     # Container environment
