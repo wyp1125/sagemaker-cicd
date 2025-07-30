@@ -243,19 +243,19 @@ if __name__ == "__main__":
         help="backend for distributed training (tcp, gloo on cpu and gloo, nccl on gpu)",
     )
     parser.add_argument(
-        "--tracking-uri",
+        "--tracking_uri",
         type=str,
         default=None,
         help="MLflow tracking URI",
     )
     parser.add_argument(
-        "--experiment-name",
+        "--experiment_name",
         type=str,
         default=None,
         help="MLflow experiment name",
     )
     parser.add_argument(
-        "--training-job-name",
+        "--training_job_name",
         type=str,
         default=None,
         help="Training job name for SageMaker",
