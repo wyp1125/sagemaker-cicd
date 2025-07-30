@@ -33,6 +33,7 @@ def main():
     from sagemaker.pytorch import PyTorch
     estimator = PyTorch(
         entry_point="mlp_pytorch.py",
+        source_dir="src",
         role=config["role"],
         framework_version="1.4.0",
         py_version="py3",
@@ -44,11 +45,9 @@ def main():
         mlflow.log_param("epochs", config["num_epochs"])
         mlflow.log_param("backend", "gloo")
         #mlflow.log_metric("run_id", 1)
-        '''
         estimator.fit({"training": config["training_data_path"], 
                        "test": config["testing_data_path"]},
                         job_name=config["training_job_name"])
-        '''
     print("Training job completed successfully.")
 
 if __name__ == "__main__":
