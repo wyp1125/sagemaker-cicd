@@ -21,6 +21,6 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Run a one-line script
-        run: echo Hello, world!
+        run: echo  ${{ vars.TRACKING_URI }}
       - name: Run Python script
         run: python train.py model_parameters.json
