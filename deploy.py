@@ -13,7 +13,8 @@ def main():
     attached_estimator = Estimator.attach(training_job_name=config["training_job_name"])
     predictor = attached_estimator.deploy(
     initial_instance_count=1,
-    instance_type='ml.t2.large'
+    instance_type='ml.t2.large',
+    image_uri="763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-inference:1.4.0-cpu-py3"
     )
 
 if __name__ == "__main__":
