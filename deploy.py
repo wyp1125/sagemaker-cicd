@@ -13,7 +13,7 @@ def main():
     attached_estimator = Estimator.attach(training_job_name=config["training_job_name"])
     predictor = attached_estimator.deploy(
     initial_instance_count=1,
-    instance_type='ml.t3.medium'
+    instance_type='ml.t2.large'
     )
 
 if __name__ == "__main__":
