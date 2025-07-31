@@ -24,7 +24,7 @@ def main():
     from sagemaker.pytorch import PyTorch
     estimator = PyTorch(
         entry_point="mlp_pytorch.py",
-        source_dir="src",
+        source_dir="code",
         role=config["role"],
         image_uri="763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-training:1.4.0-cpu-py3",
         instance_count=1,
