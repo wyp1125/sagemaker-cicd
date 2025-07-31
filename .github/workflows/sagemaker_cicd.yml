@@ -26,13 +26,8 @@ jobs:
         run: python train.py model_parameters.json
 
   deploy:
-    name: deploy
     runs-on: ubuntu-latest
-    needs: train
+    environment: production
     steps:
-      - uses: trstringer/manual-approval@v1
-        with:
-          secret: ${{ github.TOKEN }}
-          approvers: wyp1125
       - name: Deploy to production
-        run: echo deploying
+        run: python deploy.py model_parameters.json

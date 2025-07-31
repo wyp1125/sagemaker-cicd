@@ -21,14 +21,6 @@ def main():
         print(f"Error: The file {config_file} is not a valid JSON.")
         sys.exit(1)
 
-    #import mlflow
-    print("MLflow tracking URI:", os.getenv('TRACKING_URI'))
-
-    
-    import sagemaker
-    #sagemaker_session = sagemaker.Session()
-    print(config["role"])
-    
     from sagemaker.pytorch import PyTorch
     estimator = PyTorch(
         entry_point="mlp_pytorch.py",
@@ -45,7 +37,6 @@ def main():
                          "training_job_name": config["training_job_name"]}
     )
 
-        #mlflow.log_metric("run_id", 1)
     estimator.fit({"training": config["training_data_path"], 
                   "test": config["testing_data_path"]},
                   job_name=config["training_job_name"])
